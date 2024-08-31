@@ -1,0 +1,20 @@
+{
+  "/favicon.ico/route": "/favicon.ico",
+  "/page": "/",
+  "/about/page": "/about",
+  "/crud/page": "/crud",
+  "/order/page": "/order",
+  "/test/page": "/test",
+  "/reservation/page": "/reservation",
+  "/login/page": "/login",
+  "/posts/page": "/posts",
+  "/about/[id]/page": "/about/[id]",
+  "/about/faq/page": "/about/faq",
+  "/api/order/route": "/api/order",
+  "/api/posts/route": "/api/posts",
+  "/dashboard/page": "/dashboard",
+  "/api/order/[id]/route": "/api/order/[id]",
+  "/api/auth/me/route": "/api/auth/me",
+  "/api/auth/login/route": "/api/auth/login",
+  "/api/posts/[id]/route": "/api/posts/[id]"
+}

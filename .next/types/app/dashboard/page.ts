@@ -1,4 +1,4 @@
-// File: C:\Users\abc\Desktop\Hadi\My Bussiness\Donishka\web - dash\app\dashboard\page.tsx
+// File: C:\Users\abc\Desktop\Hadi\My Bussiness\Donishka\web - delivery\app\dashboard\page.tsx
 import * as entry from '../../../../app/dashboard/page.js'
 import type { ResolvingMetadata } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
