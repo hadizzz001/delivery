@@ -27,6 +27,7 @@ model Order {
   user Json
   info Json
   createdAt String
+  Status    String? @default("not delivered")
 }
 
 

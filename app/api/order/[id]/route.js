@@ -24,3 +24,30 @@ export const GET = async (request, { params }) => {
   }
 };
 
+
+
+export const PATCH = async (request, { params }) => {
+  try {
+    const body = await request.json();
+    const { Status } = body; 
+    const { id } = params;
+
+    console.log("Received status:", Status);
+    console.log("Received id:", id);
+
+    const updatePost = await prisma.order.update({
+      where: { id },
+      data: { Status },
+    });
+
+    if (!updatePost) {
+      return NextResponse.json({ message: "Post not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(updatePost);
+
+  } catch (err) {
+    console.error("Error updating post:", err); // More descriptive error logging
+    return NextResponse.json({ message: "Update Error", err }, { status: 500 });
+  }
+}

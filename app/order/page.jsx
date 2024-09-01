@@ -1,62 +1,31 @@
-"use client"
+'use client';
 
-import React from 'react'
-import Link from "next/link";
-import { useSearchParams } from 'next/navigation'
-import { fetchTemp3 } from '../utils'
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
+import { fetchTemp3 } from '../utils';
 
+const Page = () => {
+    const [allTemp1, setTemp1] = useState(null);
+    const [status, setStatus] = useState('');
+    const searchParams = useSearchParams();
+    const search = searchParams.get('id');
 
-
-
-const page = () => {
-
-    const [allTemp1, setTemp1] = useState()
-    const [showDetails, setShowDetails] = useState([]);
-    const searchParams = useSearchParams()
-    const search = searchParams.get('id')
-
-
-
-
-
-
-
-    const a = async () => {
-        const b = await fetchTemp3(search)
-        setTemp1(b)
-        setShowDetails(Array(b.info.length).fill(false));
-    }
     useEffect(() => {
-        a()
-    }, [])
+        const fetchData = async () => {
+            const b = await fetchTemp3(search);
+            setTemp1(b);
+        };
+        fetchData();
+    }, [search]);
 
-
-
-    const handleShowMore = (index) => {
-        setShowDetails((prevShowDetails) => {
-            const updatedShowDetails = [...prevShowDetails];
-            updatedShowDetails[index] = !updatedShowDetails[index];
-            return updatedShowDetails;
-        });
-    };
-
-
-
-    // const calculateFinalTotal = () => {
-    //     if (allTemp1 && allTemp1.info) {
-    //         return allTemp1.info.reduce((total, post) => {
-    //             const price = parseInt(post.price);
-    //             const qty = post.quantity;
-    //             return total + (isNaN(price) || isNaN(qty) ? 0 : price * qty);
-    //         }, 0);
-    //     }
-    //     return 0;
-    // };
-
-
-
-
+    // Update status when allTemp1 changes
+    useEffect(() => {
+        if (allTemp1 && allTemp1.Status) {
+            setStatus(allTemp1.Status);
+        }
+    }, [allTemp1]);
 
     const calculateFinalTotal = () => {
         if (allTemp1 && allTemp1.user) {
@@ -70,32 +39,59 @@ const page = () => {
                 },
                 { totalPrice: 0, totalItems: 0 }
             );
-
             return result;
         }
-
         return { totalPrice: 0, totalItems: 0 };
     };
+
     const finalTotal = calculateFinalTotal();
 
-
-
-
-
-
-
-
-
-    console.log(allTemp1);
-
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+    
+        let newStatus = '';
+        if (status === 'not delivered') {
+            console.log("Entered1");
+            newStatus = 'taken'; 
+        } else if (status === 'taken') {
+            console.log("Entered2");
+            newStatus = 'delivered'; 
+        } 
+    
+        if (newStatus) {
+            axios
+                .patch(`/api/order/${search}`, { Status: newStatus })
+                .then((res) => {
+                    console.log("Response:", res);
+                    setStatus(newStatus);
+                })
+                .catch((err) => {
+                    console.log("Error:", err);
+                })
+                .finally(() => {
+                    // window.location.replace("/dashboard");
+                });
+        } else {
+            console.log("No status change detected");
+        }
+    };
+    
 
     return (
         <>
-            <Link href='/dashboard'>
-                <button type="button" className="text-white rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2" style={{ background: "#234012" }}>
-                    <img src="https://res.cloudinary.com/dixtwo21g/image/upload/v1699388330/next/dmhmwrpyxkjzjzk5iurq.png" width={14} style={{ color: "white" }} alt="" />
+            <Link href="/">
+                <button
+                    type="button"
+                    className="text-white rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2"
+                    style={{ background: '#234012' }}
+                >
+                    <img
+                        src="https://res.cloudinary.com/dixtwo21g/image/upload/v1699388330/next/dmhmwrpyxkjzjzk5iurq.png"
+                        width={14}
+                        alt=""
+                    />
+                    Return Back
                 </button>
-                Return Home
             </Link>
             <div className="bg-gray-100 h-screen py-8">
                 <div className="container mx-auto px-4">
@@ -109,51 +105,31 @@ const page = () => {
                                             <th className="text-left font-semibold">Product</th>
                                             <th className="text-left font-semibold">Price</th>
                                             <th className="text-left font-semibold">Quantity</th>
-                                            <th className="text-left font-semibold">Total</th> 
+                                            <th className="text-left font-semibold">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {allTemp1 && Object?.keys(allTemp1).length > 0 ? (
-                                            allTemp1.user.map((temp, index) => (
-
-                                                <>
-                                                    <tr>
-                                                        <td className="py-4">
-                                                            <div className="flex items-center">
-                                                                <img 
-                                                                    className="h-16 w-16 mr-4 imageMob"
-                                                                    src={temp.img[0]}
-                                                                    alt="Product image"
-                                                                />
-                                                                <span className="font-semibold">{temp.title}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="py-4">${temp.price}</td>
-                                                        <td className="py-4">
-                                                            <div className="flex items-center">
-                                                                <span className="text-center w-8">{temp.quantity}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="py-4">${temp.quantity * +temp.price}</td>
-
-                                                        
-
-                                                    </tr>
- 
-
-
-                                                </>
-                                            ))
-
-                                        ) : (
-                                            <div className='home___error-container'>
-                                                <h2 className='text-black text-xl dont-bold'>...</h2>
-
-                                            </div>
-                                        )}
-
-
-
+                                        {allTemp1 && allTemp1.user.map((temp, index) => (
+                                            <tr key={index}>
+                                                <td className="py-4">
+                                                    <div className="flex items-center">
+                                                        <img
+                                                            className="h-16 w-16 mr-4 imageMob"
+                                                            src={temp.img[0]}
+                                                            alt="Product image"
+                                                        />
+                                                        <span className="font-semibold">{temp.title}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="py-4">${temp.price}</td>
+                                                <td className="py-4">
+                                                    <div className="flex items-center">
+                                                        <span className="text-center w-8">{temp.quantity}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="py-4">${temp.quantity * +temp.price}</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -161,8 +137,7 @@ const page = () => {
                         <div className="col-md-4">
                             <div className="bg-white rounded-lg shadow-md p-6">
                                 <h2 className="text-lg font-semibold mb-4">Customer Details</h2>
-
-                                {allTemp1 && Object?.keys(allTemp1).length > 0 ? (
+                                {allTemp1 && (
                                     <>
                                         <div className="flex justify-between mb-2">
                                             <span>Name</span>
@@ -171,11 +146,11 @@ const page = () => {
                                         <div className="flex justify-between mb-2">
                                             <span>Phone</span>
                                             <span>{allTemp1.info.phone}</span>
-                                        </div> 
+                                        </div>
                                         <div className="flex justify-between mb-2">
                                             <span>Address</span>
                                             <span>{allTemp1.info.address}</span>
-                                        </div> 
+                                        </div>
                                         <hr className="my-2" />
                                         <div className="flex justify-between mb-2">
                                             <span className="font-semibold">Total Items</span>
@@ -193,21 +168,23 @@ const page = () => {
                                             <span className="font-semibold">Total Amount</span>
                                             <span className="font-semibold">${(finalTotal.totalPrice + 3).toFixed(2)}</span>
                                         </div>
+                                        <button
+                                            type="button"
+                                            onClick={handleEditSubmit}
+                                            className={`mt-4 w-full px-4 py-2 rounded text-white ${status === 'delivered' ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500'}`}
+                                            disabled={status === 'delivered'}
+                                        >
+                                            {status === 'not delivered' ? 'Mark as Taken' : status === 'taken' ? 'Mark as Delivered' : 'Delivered'}
+                                        </button>
                                     </>
-                                ) : (
-                                    <div className='home___error-container'>
-                                        <h2 className='text-black text-xl dont-bold'>...</h2>
-
-                                    </div>
                                 )}
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default page
+export default Page;

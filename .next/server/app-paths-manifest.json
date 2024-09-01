@@ -1,20 +1,7 @@
 {
-  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
-  "/about/page": "app/about/page.js",
-  "/crud/page": "app/crud/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/order/page": "app/order/page.js",
-  "/test/page": "app/test/page.js",
-  "/reservation/page": "app/reservation/page.js",
-  "/login/page": "app/login/page.js",
-  "/posts/page": "app/posts/page.js",
-  "/about/[id]/page": "app/about/[id]/page.js",
-  "/about/faq/page": "app/about/faq/page.js",
   "/api/order/route": "app/api/order/route.js",
-  "/api/posts/route": "app/api/posts/route.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/api/order/[id]/route": "app/api/order/[id]/route.js",
-  "/api/auth/me/route": "app/api/auth/me/route.js",
-  "/api/auth/login/route": "app/api/auth/login/route.js",
-  "/api/posts/[id]/route": "app/api/posts/[id]/route.js"
+  "/api/order/[id]/route": "app/api/order/[id]/route.js"
 }

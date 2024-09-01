@@ -1,118 +1,104 @@
-"use client";
 
-import axios, { AxiosError } from "axios";
+"use client"
+import Link from "next/link";
+import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
+import { fetchTemp1 } from './utils/index'
+import { useState, useEffect } from "react";
 
-export default function Home() {
-  const { push } = useRouter();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
 
-    const payload = {
-      username: event.currentTarget.username.value,
-      password: event.currentTarget.password.value,
-    };
 
-    try {
-      const { data } = await axios.post("/api/auth/login", payload);
 
-      alert(JSON.stringify(data));
-      window.location.replace("/dashboard");
-    } catch (e) {
-      const error = e as AxiosError;
+const page = () => {
+    const [allTemp, setTemp] = useState<any>()
+    const router = useRouter()
 
-      alert(error.message);
+    const a = async () => {
+        const b = await fetchTemp1() 
+        setTemp(b)
     }
-  };
 
-  return (
-     
+    useEffect(() => {
+        a()
+    }, [])
 
-    <>
-      <>
-      <style
-  dangerouslySetInnerHTML={{
-    __html: "\n  body{\n    background:black;\n color:white;  }\n"
-  }}
-/>
+if(allTemp)
+    console.log(allTemp);
+    
 
-        {/* TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com */}
-        <section className="h-screen container">
-          <div className="h-full">
-            {/* Left column container with background*/}
-            <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
-              <div className="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12" id="contentMob">
-                <img
-                  src="https://ucarecdn.com/6c1db2f0-a838-418d-9cfa-d83c7dc8b111/8a91d52bc39e4172ad2f0d86cc6948c1.jpg"
-                  className="w-50"
-                  alt="Sample image"
-                />
-              </div>
-              <div className="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
-                <form onSubmit={handleSubmit}>
 
-                  <div className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
-                    <p className="mx-4 mb-0 text-center font-semibold dark:text-white">
-                      Login
-                    </p>
-                  </div>
-                  {/* Email input */}
-                  <div className="relative mb-6" >
-                    <input
-                      type="text"
-                      className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear "
-                      id="username"
-                      name="username"
-                      placeholder="Username"
-                    />
-                    <label
-                      htmlFor="username"
-                      className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out "
-                    >
 
-                    </label>
-                  </div>
-                  {/* Password input */}
-                  <div className="relative mb-6" >
-                    <input
-                      type="password"
-                      className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear  "
-                      id="password"
-                      name="password"
-                      placeholder="Password"
-                    />
-                    <label
-                      htmlFor="password"
-                      className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] "
-                    >
-
-                    </label>
-                  </div>
-
-                  {/* Login button */}
-                  <div className="text-center lg:text-left">
-                    <button
-                      type="submit"
-                      className="inline-block rounded  px-7 pb-2.5 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                      style={{ background: "#c01907" }}
-                    >
-                      Login
-                    </button>
-
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
-      </>
+    const calculateFinalTotal = (allTemp1:any) => {
+        if (allTemp1) {
+          const result = allTemp1.reduce(
+            (acc:any, post:any) => {
+              const price = parseInt(post.price);
+              const qty = post.quantity;
+              acc.totalPrice += isNaN(price) || isNaN(qty) ? 0 : price * qty;
+              acc.totalItems += isNaN(qty) ? 0 : qty;
+              return acc;
+            },
+            { totalPrice: 0, totalItems: 0 }
+          );
+    
+          return result;
+        }
+    
+        return { totalPrice: 0, totalItems: 0 };
+      };
+ 
 
 
 
 
 
 
-    </>
-  );
+
+
+    return (
+        <> 
+<table className="table table-striped container">
+    <thead>
+        <tr>
+            <th scope="col">Order #</th>
+            <th scope="col">Total Amount</th>
+            <th scope="col">Order Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {
+            allTemp && allTemp?.length > 0 ? (
+                allTemp.map((post: any, index: any) => (
+                    <tr key={index}>
+                        <td>{post.id}</td>
+                        <td>${(calculateFinalTotal(post.user).totalPrice + 3).toFixed(2)}</td>
+                        <td>{post.createdAt}</td>
+                        <td className={
+                            post.Status === null || post.Status === 'not delivered' ? 'text-red-600 font-bold' :
+                            post.Status === 'taken' ? 'text-yellow-500 font-bold' :
+                            post.Status === 'delivered' ? 'text-green-600 font-bold' :
+                            ''
+                        }>
+                            {post.Status || 'not delivered'}
+                        </td>
+                        <td><Link className="text-blue-700 mr-3" href={`/order?id=${post.id}`}>View</Link></td>
+                    </tr>
+                ))
+            ) : (
+                <div className='home___error-container'>
+                    <h2 className='text-black text-xl dont-bold'>...</h2>
+                </div>
+            )
+        }
+    </tbody>
+</table>
+
+        </>
+
+    )
 }
+
+export default page
