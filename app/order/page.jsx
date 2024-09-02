@@ -31,7 +31,7 @@ const Page = () => {
         if (allTemp1 && allTemp1.user) {
             const result = allTemp1.user.reduce(
                 (acc, post) => {
-                    const price = parseInt(post.price);
+                    const price = parseFloat(post.price);
                     const qty = post.quantity;
                     acc.totalPrice += isNaN(price) || isNaN(qty) ? 0 : price * qty;
                     acc.totalItems += isNaN(qty) ? 0 : qty;
